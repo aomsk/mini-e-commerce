@@ -1,6 +1,7 @@
-import express, { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import { pool } from "../config";
 import { RowDataPacket, ResultSetHeader } from "mysql2";
+import { hashPassword } from "../utils/hashPassword";
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -11,16 +12,19 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
 
     // Check user is existing
     const [user] = await pool.query<RowDataPacket[]>("SELECT * FROM users WHERE email = ?", [email]);
-    if (user) {
+    if (user.length > 0) {
       throw new Error("User already exists please login");
     }
+
+    // Hash password
+    const hash = await hashPassword(password);
 
     // Insert new user to DB
     const [result] = await pool.query<ResultSetHeader>("INSERT INTO `users` (f_name, l_name, email, password) VALUES (?, ?, ?, ?);", [
       f_name,
       l_name,
       email,
-      password,
+      hash,
     ]);
     if (result.affectedRows == 1) {
       const user = {
@@ -28,7 +32,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
         f_name,
         l_name,
         email,
-        password,
+        hash,
       };
       return res.status(201).json({ message: "Create user successfully", user }).end();
     }
