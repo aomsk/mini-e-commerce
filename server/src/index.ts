@@ -2,8 +2,11 @@ import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import "dotenv/config";
+
+// import rooutes
 import userRouter from "./routes/users.route";
 import registerRouter from "./routes/register.route";
+import loginRouter from "./routes/login.route";
 
 // create app instance
 const app = express();
@@ -20,6 +23,7 @@ app.get("/help", (req: Request, res: Response) => {
 // routes
 app.use("/", registerRouter);
 app.use("/", userRouter);
+app.use("/", loginRouter);
 
 // start server
 const PORT = process.env.SERVER_PORT || 8080;
