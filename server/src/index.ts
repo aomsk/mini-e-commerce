@@ -1,8 +1,9 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import "dotenv/config";
 import userRouter from "./routes/users.route";
+import registerRouter from "./routes/register.route";
 
 // create app instance
 const app = express();
@@ -12,11 +13,12 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // help check
-app.get("/help", (req: express.Request, res: express.Response) => {
+app.get("/help", (req: Request, res: Response) => {
   res.status(200).json({ message: "Help Check", status: "OK" });
 });
 
 // routes
+app.use("/", registerRouter);
 app.use("/", userRouter);
 
 // start server
