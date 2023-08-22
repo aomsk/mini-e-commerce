@@ -20,12 +20,10 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
     const hash = await hashPassword(password);
 
     // Insert new user to DB
-    const [result] = await pool.query<ResultSetHeader>("INSERT INTO `users` (f_name, l_name, email, password) VALUES (?, ?, ?, ?);", [
-      f_name,
-      l_name,
-      email,
-      hash,
-    ]);
+    const [result] = await pool.query<ResultSetHeader>(
+      "INSERT INTO `users` (f_name, l_name, email, password, role_id) VALUES (?, ?, ?, ?, ?);",
+      [f_name, l_name, email, hash, 2]
+    );
     if (result.affectedRows == 1) {
       const user = {
         id: result.insertId,
