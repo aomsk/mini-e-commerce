@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { checkPassword } from "../utils/hashPassword";
+import { comParePassword } from "../utils/hashPassword";
 import { pool } from "../config";
 import { RowDataPacket } from "mysql2";
+import { getAccessToken } from "../utils/authentication";
 
 export const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -9,15 +10,18 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     if (!email || !password) {
       throw new Error("Please enter email and password");
     }
-
+    // get user data
     const [user] = await pool.query<RowDataPacket[]>("SELECT * FROM users WHERE email = ?", [email]);
     if (user.length == 0) {
       throw new Error("User doesn't exist in DB please register");
     }
-
-    const check_password = await checkPassword(password, user[0].password);
-    if (check_password) {
-      return res.status(200).json({ message: "Login successful" });
+    // compare password
+    const compare_password = await comParePassword(password, user[0].password);
+    if (compare_password) {
+      // get access token
+      const access_token = await getAccessToken(user[0].email, user[0].role_id);
+      console.log("access_token: ", access_token);
+      return res.status(200).json({ message: "Login successful", token: access_token });
     } else {
       throw new Error("Password isn't match please try again");
     }

@@ -26,7 +26,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
     );
     if (result.affectedRows == 1) {
       const user = {
-        id: result.insertId,
+        user_id: result.insertId,
         f_name,
         l_name,
         email,
