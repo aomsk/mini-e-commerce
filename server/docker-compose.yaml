@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+  db:
+    build: ./db
+    environment:
+      MYSQL_DATABASE: e-commerce
+      MYSQL_ROOT_PASSWORD: P@ssword1234
+    ports:
+      - "33061:3306"
+    restart: always
+  web:
+    build: .
+    environment:
+      MYSQL_DATABASE: e-commerce
+      MYSQL_USER: root
+      MYSQL_PASSWORD: P@ssword1234
+      MYSQL_HOST: db
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    restart: on-failure
