@@ -20,7 +20,6 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     if (compare_password) {
       // get access token
       const access_token = await getAccessToken(user[0].email, user[0].role_id);
-      console.log("access_token: ", access_token);
       return res.status(200).json({ message: "Login successful", token: access_token });
     } else {
       throw new Error("Password isn't match please try again");

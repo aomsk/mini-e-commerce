@@ -1,13 +1,21 @@
 import bcrypt from "bcrypt";
 
 export const hashPassword = async (password: string) => {
-  const saltRounds = 10;
-  const salt = bcrypt.genSaltSync(saltRounds);
-  const hash = bcrypt.hashSync(password, salt);
-  return hash;
+  try {
+    const saltRounds = 10;
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const hash = bcrypt.hashSync(password, salt);
+    return hash;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const comParePassword = async (password: string, hash: string) => {
-  const checkPassword = bcrypt.compareSync(password, hash);
-  return checkPassword;
+  try {
+    const checkPassword = bcrypt.compareSync(password, hash);
+    return checkPassword;
+  } catch (error) {
+    throw error;
+  }
 };
