@@ -2,14 +2,16 @@ version: "3.9"
 services:
   db:
     build: ./db
+    container_name: mysql_container
     environment:
       MYSQL_DATABASE: e-commerce
       MYSQL_ROOT_PASSWORD: P@ssword1234
     ports:
       - "33061:3306"
     restart: always
-  web:
+  api:
     build: .
+    container_name: api-container
     environment:
       MYSQL_DATABASE: e-commerce
       MYSQL_USER: root
