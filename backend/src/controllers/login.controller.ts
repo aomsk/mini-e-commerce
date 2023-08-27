@@ -13,7 +13,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     // get user data
     const [user] = await pool.query<RowDataPacket[]>("SELECT * FROM users WHERE email = ?", [email]);
     if (user.length == 0) {
-      throw new Error("User doesn't exist in DB please register");
+      throw new Error("User doesn't exist please register");
     }
     // compare password
     const compare_password = await comParePassword(password, user[0].password);
