@@ -1,5 +1,4 @@
 import { useRouteError } from "react-router-dom";
-import Navbar from "./Navbar";
 import "../styles/ErrorPage.css";
 
 export default function ErrorPage() {
@@ -9,7 +8,6 @@ export default function ErrorPage() {
 
   return (
     <>
-      <Navbar />
       <div id="error-page" className="container">
         <div className="errorPage_container">
           <h1>Oops!</h1>

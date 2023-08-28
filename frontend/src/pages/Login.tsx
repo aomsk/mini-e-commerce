@@ -1,8 +1,8 @@
 import React from "react";
 import { Button, Form, Input, message } from "antd";
-import Navbar from "../components/Navbar";
 import "../styles/Login.css";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 type FieldType = {
   email?: string;
@@ -11,17 +11,22 @@ type FieldType = {
 
 const Login: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
+  const navigate = useNavigate();
 
   const onFinish = async (values: FieldType) => {
     await axios
       .post("http://localhost:3000/api/login", values)
       .then((response) => {
         console.log(response);
+        localStorage.setItem("token", response.data.token);
         if (response.status === 200) {
           messageApi.open({
             type: "success",
             content: response.data.message,
           });
+          setTimeout(() => {
+            navigate("/", { replace: true });
+          }, 1000);
         }
       })
       .catch((error) => {
@@ -40,7 +45,6 @@ const Login: React.FC = () => {
 
   return (
     <>
-      <Navbar />
       {contextHolder}
       <div className="container">
         <div className="form_ccontainer">
@@ -54,7 +58,7 @@ const Login: React.FC = () => {
             initialValues={{ remember: true }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
-            autoComplete="off"
+            autoComplete="on"
           >
             <Form.Item<FieldType>
               label="Email"
