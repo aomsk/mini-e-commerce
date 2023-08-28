@@ -3,11 +3,15 @@ nav {
   justify-content: space-between;
   align-items: center;
   padding: 0 1rem;
-  background-color: #F7DC6F;
+  background-color: #364d79;
   height: 50px;
   width: 100%;
   position: fixed;
   z-index: 1;
+}
+
+nav h2 {
+  color: #fff;
 }
 
 nav ul {
@@ -15,15 +19,24 @@ nav ul {
 }
 
 nav ul li {
-  margin: 0 1rem;
+  /* margin: 0 1rem; */
   list-style: none;
   cursor: pointer;
 }
 
-.link {
-  text-decoration: none;
-  color: #000;
+nav ul li a {
+  border-radius: 5px;
   padding: 0 1rem;
+  text-decoration: none;
+  color: #fff;
+  padding: .5rem;
+  margin: 0 .3rem;
+}
+
+nav ul li a.active {
+  background-color: #dd191d;
+  /* padding: .4rem; */
+  transition: all .4s ease;
 }
 
 /* @media only screen and (max-width: 600px) {

@@ -1,41 +1,19 @@
 import React from "react";
-import { Button, Form, Input, message } from "antd";
+import { Button, Form, Input } from "antd";
 import "../styles/Login.css";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 type FieldType = {
-  email?: string;
-  password?: string;
+  email: string;
+  password: string;
 };
 
 const Login: React.FC = () => {
-  const [messageApi, contextHolder] = message.useMessage();
-  const navigate = useNavigate();
+  const { login } = useAuthContext();
 
-  const onFinish = async (values: FieldType) => {
-    await axios
-      .post("http://localhost:3000/api/login", values)
-      .then((response) => {
-        console.log(response);
-        localStorage.setItem("token", response.data.token);
-        if (response.status === 200) {
-          messageApi.open({
-            type: "success",
-            content: response.data.message,
-          });
-          setTimeout(() => {
-            navigate("/", { replace: true });
-          }, 1000);
-        }
-      })
-      .catch((error) => {
-        console.log("error: ", error);
-        messageApi.open({
-          type: "error",
-          content: error.response.data.message,
-        });
-      });
+  const onFinish = (values: FieldType) => {
+    const { email, password } = values;
+    login(email, password);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,7 +23,6 @@ const Login: React.FC = () => {
 
   return (
     <>
-      {contextHolder}
       <div className="container">
         <div className="form_ccontainer">
           <Form

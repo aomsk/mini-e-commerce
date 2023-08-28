@@ -1,80 +1,46 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "../styles/navbar.css";
-// import { useState } from "react";
-import { Link } from "react-router-dom";
-
+import { Link, NavLink } from "react-router-dom";
+import { useAuthContext } from "../hooks/useAuthContext";
 const Navbar: React.FC = () => {
-  // const [isLogin] = useState<boolean>(false);
-  // const token = localStorage.getItem("token");
-  const [token, setToken] = useState<string | null>();
-
-  // const menus = [
-  //   {
-  //     name: "Home",
-  //     path: "/",
-  //   },
-  //   {
-  //     name: "Login",
-  //     path: "/login",
-  //   },
-  //   {
-  //     name: "Register",
-  //     path: "/register",
-  //   },
-  // ];
-
-  useEffect(() => {
-    const local_token = localStorage.getItem("token");
-    setToken(local_token);
-  }, [token]);
+  const { user, logout } = useAuthContext();
+  const token = localStorage.getItem("token");
 
   return (
     <nav>
       <div>
-        <Link to={"/"} className="link">
+        <Link to={"/"}>
           <h2>Mini Mini</h2>
         </Link>
       </div>
       <div>
         <ul>
           <li>
-            <Link className="link" to={"/"}>
-              Home
-            </Link>
-            {!token ? (
-              <Link className="link" to={"/login"}>
-                Login
-              </Link>
-            ) : (
-              ""
-            )}
-            {!token ? (
-              <Link className="link" to={"/register"}>
-                Register
-              </Link>
-            ) : (
-              ""
-            )}
-            {token ? (
-              <Link className="link" to={"/cart"}>
-                Cart
-              </Link>
-            ) : (
-              ""
-            )}
+            <NavLink to={"/"}>Home</NavLink>
           </li>
-        </ul>
-        {/* <ul>
-          {menus.map((menu, index) => {
-            return (
-              <li key={index}>
-                <Link to={menu.path} className="link">
-                  {menu.name}
-                </Link>
+          {user.token || token ? (
+            <>
+              <li>
+                <NavLink to={"/cart"}>Cart</NavLink>
               </li>
-            );
-          })}
-        </ul> */}
+              <li>
+                <NavLink to={"/profile"}>Profile</NavLink>
+              </li>
+              <li>
+                <a onClick={logout}>Logout</a>
+              </li>
+            </>
+          ) : (
+            <>
+              <li>
+                <NavLink to={"/login"}>Login</NavLink>
+              </li>
+              <li>
+                <NavLink to={"/register"}>Register</NavLink>
+              </li>
+            </>
+          )}
+        </ul>
       </div>
     </nav>
   );
