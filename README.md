@@ -8,6 +8,7 @@ Mini E-commerce Project
 
 - React
 - TypeScript
+- Ant Design
 
 ## Backend
 
