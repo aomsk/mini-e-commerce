@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import "../styles/Register.css";
 
 type FieldType = {
-  f_name: string;
-  l_name: string;
+  first_name: string;
+  last_name: string;
   email: string;
   password: string;
   confirm_password: string;
@@ -69,7 +69,7 @@ const Register = () => {
               <Col xs={24} xl={12}>
                 <Form.Item<FieldType>
                   label="first name"
-                  name="f_name"
+                  name="first_name"
                   rules={[{ required: true, type: "string", message: "Please input your first name!" }]}
                 >
                   <Input />
@@ -78,7 +78,7 @@ const Register = () => {
               <Col xs={24} xl={12}>
                 <Form.Item<FieldType>
                   label="last name"
-                  name="l_name"
+                  name="last_name"
                   rules={[{ required: true, type: "string", message: "Please input your last name!" }]}
                 >
                   <Input />

@@ -5,8 +5,8 @@ import { hashPassword } from "../utils/hashPassword";
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { f_name, l_name, email, password } = req.body;
-    if (!f_name || !l_name || !email || !password) {
+    const { first_name, last_name, email, password } = req.body;
+    if (!first_name || !last_name || !email || !password) {
       throw new Error("Please enter a first name, last name, email, or password");
     }
 
@@ -20,15 +20,20 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
     const hash = await hashPassword(password);
 
     // Insert new user to DB
-    const [result] = await pool.query<ResultSetHeader>(
-      "INSERT INTO `users` (f_name, l_name, email, password, role_id) VALUES (?, ?, ?, ?, ?);",
-      [f_name, l_name, email, hash, 2]
+    const [user_result] = await pool.query<ResultSetHeader>(
+      "INSERT INTO `users` (first_name, last_name, email, password) VALUES (?, ?, ?, ?);",
+      [first_name, last_name, email, hash, 2]
     );
-    if (result.affectedRows == 1) {
+    const [role_result] = await pool.query<ResultSetHeader>("INSERT INTO `user_role` (user_id, role_id) VALUES (?,?)", [
+      user_result.insertId,
+      2,
+    ]);
+
+    if (user_result.affectedRows == 1 && role_result.affectedRows == 1) {
       const user = {
-        user_id: result.insertId,
-        f_name,
-        l_name,
+        user_id: user_result.insertId,
+        first_name,
+        last_name,
         email,
         hash,
       };
