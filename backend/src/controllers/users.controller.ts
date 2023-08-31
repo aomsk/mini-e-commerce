@@ -42,7 +42,7 @@ export const updateUserByID = async (req: Request, res: Response, next: NextFunc
         httpStatusCode: 400,
       };
     }
-    
+
     // Update user
     const [result] = await pool.query<ResultSetHeader>(
       "UPDATE users SET `f_name`=?, `l_name`=?, `email`=?, `password`=? WHERE `user_id` = ?",

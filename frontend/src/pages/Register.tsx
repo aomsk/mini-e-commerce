@@ -47,7 +47,7 @@ const Register = () => {
   };
 
   const onFinishFailed = (errorInfo: unknown) => {
-    message.error("Submit Error!");
+    message.error("Please enter input field!");
     console.log("Failed:", errorInfo as string);
   };
 
