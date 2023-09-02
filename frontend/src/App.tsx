@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Cart from "./pages/Cart";
 import Register from "./pages/Register";
+import Profile from "./pages/Profile";
 // protected routes
 import ProtectedRoute from "./utils/ProtectedRoutes";
 // context
@@ -22,6 +23,7 @@ const App = () => {
       <Routes>
         <Route element={<ProtectedRoute />} errorElement={<ErrorPage />}>
           <Route path="/cart" element={<Cart />} errorElement={<ErrorPage />} />
+          <Route path="/profile" element={<Profile />} errorElement={<ErrorPage />} />
         </Route>
         <Route path="/" element={<Home />} errorElement={<ErrorPage />} />
         <Route path="/login" element={!token ? <Login /> : <Navigate to="/" replace />} errorElement={<ErrorPage />} />
