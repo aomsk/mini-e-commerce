@@ -7,6 +7,7 @@ import "dotenv/config";
 import userRouter from "./routes/users.route";
 import registerRouter from "./routes/register.route";
 import loginRouter from "./routes/login.route";
+import productsRouter from "./routes/products.route";
 
 // create app instance
 const app = express();
@@ -24,6 +25,7 @@ app.get("/help", (req: Request, res: Response) => {
 app.use("/", registerRouter);
 app.use("/", userRouter);
 app.use("/", loginRouter);
+app.use("/", productsRouter);
 
 // start server
 const PORT = process.env.PORT || 8080;
