@@ -25,7 +25,7 @@ export const getUserByEmail = async (req: Request, res: Response, next: NextFunc
     if (user.length === 0) {
       throw new Error("No users found");
     }
-    return res.status(200).json({ user }).end();
+    return res.status(200).json({ user: user[0] }).end();
   } catch (error: any) {
     next(error);
     return res.status(400).json({ status: "error", message: error.message });
