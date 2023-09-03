@@ -30,11 +30,40 @@ export const getProductBySlug = async (req: Request, res: Response) => {
   }
 };
 
-// update product by slug and product_id
-export const updateProductBySlugAngID = (req: Request, res: Response) => {};
+// update product by product_id
+export const updateProductByID = async (req: Request, res: Response) => {
+  try {
+    const { product_id, name, description, price, quantity } = req.body;
+    if (!product_id || !name || !description || !price || !quantity) {
+      throw new Error("Please provide a name, description, price and quantity");
+    }
+    const slug = slugify(name, { lower: true });
 
-// delete product by slug and product_id
-export const deleteProductBySlugAngID = (req: Request, res: Response) => {};
+    const [result] = await pool.query<ResultSetHeader>(
+      "UPDATE products SET `name`=?, `description`=?, `price`=?, `quantity`=?, `slug`=? WHERE `product_id` = ?",
+      [name, description, price, quantity, slug, product_id]
+    );
+
+    if (result.affectedRows === 0) {
+      throw new Error("Can't update products");
+    }
+
+    const updateProduct = {
+      product_id,
+      name,
+      description,
+      price,
+      quantity,
+      slug,
+    };
+    return res.status(200).json({ message: "Updated products successfully", updateProduct });
+  } catch (error: any) {
+    return res.status(400).json({ status: "error", message: error.message });
+  }
+};
+
+// delete product by product_id
+export const deleteProductByID = (req: Request, res: Response) => {};
 
 // create a new product
 export const createNewProduct = async (req: Request, res: Response) => {
