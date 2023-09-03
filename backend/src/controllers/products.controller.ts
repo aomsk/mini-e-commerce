@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import { RowDataPacket, ResultSetHeader } from "mysql2";
 import { pool } from "../config";
 import slugify from "slugify";
@@ -8,16 +8,27 @@ export const getAllProducts = async (req: Request, res: Response) => {
   try {
     const [products] = await pool.query<RowDataPacket[]>("SELECT * FROM products");
     if (products.length === 0) {
-      throw { httpStatusCode: 200, message: "Product not found" };
+      throw new Error("Product not found");
     }
     res.status(200).json({ message: "Get all products successfully", products });
   } catch (error: any) {
-    return res.status(error.httpStatusCode).json({ status: "error", message: error.message });
+    return res.status(400).json({ status: "error", message: error.message });
   }
 };
 
 // get product by slug
-export const getProductBySlug = (req: Request, res: Response) => {};
+export const getProductBySlug = async (req: Request, res: Response) => {
+  try {
+    const { slug } = req.params;
+    const [product] = await pool.query<RowDataPacket[]>("SELECT * FROM products WHERE slug = ?", [slug]);
+    if (product.length === 0) {
+      throw new Error("Product not found");
+    }
+    return res.status(200).json({ message: "Get product by slug successfully", product: product[0] });
+  } catch (error: any) {
+    return res.status(400).json({ status: "error", message: error.message });
+  }
+};
 
 // update product by slug and product_id
 export const updateProductBySlugAngID = (req: Request, res: Response) => {};
