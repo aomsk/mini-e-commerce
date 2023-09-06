@@ -8,10 +8,12 @@ services:
       MYSQL_ROOT_PASSWORD: P@ssword1234
     ports:
       - "33061:3306"
+    volumes:
+      - mini_e_commerce_mysql_data:/var/lib/mysql # เปลี่ยน path เป็น volume ที่เราสร้างไปด้านล่างใน docker-compose
     restart: always
-  api:
+  backend:
     build: .
-    container_name: api-container
+    container_name: backend_container
     environment:
       MYSQL_DATABASE: e-commerce
       MYSQL_USER: root
@@ -22,3 +24,6 @@ services:
     depends_on:
       - db
     restart: on-failure
+volumes:
+  mini_e_commerce_mysql_data: # กำหนดชื่อ volume ที่ต้องการจะสร้าง
+    driver: local
