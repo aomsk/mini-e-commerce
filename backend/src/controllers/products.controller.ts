@@ -70,8 +70,14 @@ export const deleteProductByID = async (req: Request, res: Response) => {
       throw new Error("Please provide a product_id");
     }
 
-    const [result] = await pool.query<ResultSetHeader>("DELETE FROM products WHERE product_id = ?", [id]);
+    // check product is existing in db
+    const [product] = await pool.query<RowDataPacket[]>("SELECT * FROM products WHERE product_id = ?", [id]);
+    if (product.length === 0) {
+      throw new Error("Product not found");
+    }
 
+    // delete product by product_id
+    const [result] = await pool.query<ResultSetHeader>("DELETE FROM products WHERE product_id = ?", [id]);
     if (result.affectedRows === 0) {
       throw new Error("Can't delete products");
     }
