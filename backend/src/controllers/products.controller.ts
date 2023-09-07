@@ -63,7 +63,24 @@ export const updateProductByID = async (req: Request, res: Response) => {
 };
 
 // delete product by product_id
-export const deleteProductByID = (req: Request, res: Response) => {};
+export const deleteProductByID = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      throw new Error("Please provide a product_id");
+    }
+
+    const [result] = await pool.query<ResultSetHeader>("DELETE FROM products WHERE product_id = ?", [id]);
+
+    if (result.affectedRows === 0) {
+      throw new Error("Can't delete products");
+    }
+
+    return res.status(200).json({ message: "Delete products successfully" });
+  } catch (error: any) {
+    return res.status(400).json({ status: "error", message: error.message });
+  }
+};
 
 // create a new product
 export const createNewProduct = async (req: Request, res: Response) => {
