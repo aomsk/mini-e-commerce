@@ -11,6 +11,18 @@ services:
     volumes:
       - mini_e_commerce_mysql_data:/var/lib/mysql # เปลี่ยน path เป็น volume ที่เราสร้างไปด้านล่างใน docker-compose
     restart: always
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db # ระบุ host ที่จะให้ phpmyadmin ไปจัดการ ซึ่งสามารถใส่เป็นชื่อ container name (db) ได้เลย
+      PMA_PORT: 3306 # ระบุ port ของ Database
+      PMA_USER: root # ระบุ user ของ Database
+      PMA_PASSWORD: P@ssword1234 # ระบุ password ของ Database
+    depends_on:
+      - db
   backend:
     build: .
     container_name: backend_container
