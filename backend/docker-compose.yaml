@@ -23,20 +23,20 @@ services:
       PMA_PASSWORD: P@ssword1234 # ระบุ password ของ Database
     depends_on:
       - db
-  backend:
-    build: .
-    container_name: backend_container
-    environment:
-      MYSQL_DATABASE: e-commerce
-      MYSQL_USER: root
-      MYSQL_PASSWORD: P@ssword1234
-      MYSQL_HOST: db
-      MYSQL_PORT: 3306
-    ports:
-      - "3000:3000"
-    depends_on:
-      - db
-    restart: on-failure
+  # backend:
+  #   build: .
+  #   container_name: backend_container
+  #   environment:
+  #     MYSQL_DATABASE: e-commerce
+  #     MYSQL_USER: root
+  #     MYSQL_PASSWORD: P@ssword1234
+  #     MYSQL_HOST: db
+  #     MYSQL_PORT: 3306
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - db
+  #   restart: on-failure
 volumes:
   mini_e_commerce_mysql_data: # กำหนดชื่อ volume ที่ต้องการจะสร้าง
     driver: local
