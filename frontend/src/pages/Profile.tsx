@@ -11,10 +11,10 @@ interface User {
 
 const Profile = () => {
   const [userData, setUserData] = useState<User>();
-  const { currentUser } = useAuthContext();
+  const { currentUser, user } = useAuthContext();
   const getUserData = async () => {
-    const email: string | null = localStorage.getItem("email");
-
+    // const email: string | null = localStorage.getItem("email");
+    const { email } = user;
     await axios
       .post("http://localhost:3000/api/user", { email })
 

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, redirect } from "react-router-dom";
 import { message } from "antd";
@@ -14,7 +14,7 @@ interface IUser {
 }
 
 interface IAuthContext {
-  user: IUser;
+  user: IUser | null;
   login: (email: string, password: string) => void;
   logout: () => void;
   currentUser: string;
@@ -25,12 +25,25 @@ export const AuthContext = createContext<IAuthContext | null>(null);
 export const AuthContextProvider = ({ children }: IProps) => {
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
-  const [user, setUser] = useState<IUser>({
-    email: "",
-    token: "",
-  });
-  const [currentUser, setCurrentUser] = useState<string>(localStorage.getItem("user_type") || "public");
-  console.log("currentUser: ", currentUser);
+  const [user, setUser] = useState<IUser | null>(
+    JSON.parse(localStorage.getItem("user") as string) || {
+      email: "",
+      token: "",
+    }
+  );
+  const [currentUser, setCurrentUser] = useState<string>("public");
+
+  useEffect(() => {
+    console.log("user : ", user);
+    if (user?.token) {
+      const decoded: any = jwtDecode((user as IUser)?.token);
+      if (decoded.role === "admin") {
+        setCurrentUser("admin");
+      } else {
+        setCurrentUser("customer");
+      }
+    }
+  }, [user]);
 
   // login
   const login = async (email: string, password: string) => {
@@ -39,18 +52,10 @@ export const AuthContextProvider = ({ children }: IProps) => {
       .then((response) => {
         if (response.status === 200) {
           setUser(response.data.user);
-          const decoded: any = jwtDecode(response.data.user.token);
-          console.log("decoded: ", decoded);
-          if (decoded.role === "admin") {
-            setCurrentUser("admin");
-            localStorage.setItem("user_type", "admin");
-          } else {
-            setCurrentUser("customer");
-            localStorage.setItem("user_type", "customer");
-          }
           navigate("/");
           localStorage.setItem("token", response.data.user.token);
           localStorage.setItem("email", response.data.user.email);
+          localStorage.setItem("user", JSON.stringify(response.data.user));
         }
       })
       .catch((error) => {

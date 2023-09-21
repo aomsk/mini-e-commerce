@@ -18,8 +18,8 @@ import AdminRoutes from "./utils/AdminRoutes";
 import { useAuthContext } from "./hooks/useAuthContext";
 
 const App = () => {
-  const token = localStorage.getItem("token");
-  const { currentUser } = useAuthContext();
+  const { currentUser, user } = useAuthContext();
+
   return (
     <>
       <Navbar />
@@ -35,16 +35,8 @@ const App = () => {
         </Route>
         // public routes
         <Route path="/" element={<Home />} errorElement={<ErrorPage />} />
-        <Route
-          path="/login"
-          element={!token || currentUser === "public" ? <Login /> : <Navigate to="/" replace />}
-          errorElement={<ErrorPage />}
-        />
-        <Route
-          path="/register"
-          element={!token || currentUser === "public" ? <Register /> : <Navigate to="/" replace />}
-          errorElement={<ErrorPage />}
-        />
+        <Route path="/login" element={!user?.token || currentUser === "public" ? <Login /> : <Navigate to="/" replace />} errorElement={<ErrorPage />} />
+        <Route path="/register" element={!user?.token || currentUser === "public" ? <Register /> : <Navigate to="/" replace />} errorElement={<ErrorPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

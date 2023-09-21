@@ -5,7 +5,7 @@ const ProtectedRoute = () => {
   const { user } = useAuthContext();
   const token = localStorage.getItem("token");
 
-  if (!user.token && !token) {
+  if (!user?.token && !token) {
     return <Navigate to={"/"} replace />;
   }
 
