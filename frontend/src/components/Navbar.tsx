@@ -3,8 +3,13 @@ import "../styles/navbar.css";
 import { Link, NavLink } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 const Navbar: React.FC = () => {
-  const { user, logout } = useAuthContext();
-  const token = localStorage.getItem("token");
+  const { logout, currentUser } = useAuthContext();
+
+  const USER_TYPES = {
+    PUBLIC_USER: "public",
+    CUSTOMER_USER: "customer",
+    ADMIN_USER: "admin",
+  };
 
   return (
     <nav>
@@ -18,7 +23,14 @@ const Navbar: React.FC = () => {
           <li>
             <NavLink to={"/"}>Home</NavLink>
           </li>
-          {user.token || token ? (
+          {currentUser === USER_TYPES.ADMIN_USER && (
+            <>
+              <li>
+                <NavLink to={"/admin"}>Admin</NavLink>
+              </li>
+            </>
+          )}
+          {currentUser === USER_TYPES.CUSTOMER_USER || currentUser === USER_TYPES.ADMIN_USER ? (
             <>
               <li>
                 <NavLink to={"/cart"}>Cart</NavLink>
@@ -30,7 +42,8 @@ const Navbar: React.FC = () => {
                 <a onClick={logout}>Logout</a>
               </li>
             </>
-          ) : (
+          ) : null}
+          {currentUser === USER_TYPES.PUBLIC_USER && (
             <>
               <li>
                 <NavLink to={"/login"}>Login</NavLink>

@@ -11,7 +11,7 @@ interface User {
 
 const Profile = () => {
   const [userData, setUserData] = useState<User>();
-  const { isAdmin } = useAuthContext();
+  const { currentUser } = useAuthContext();
   const getUserData = async () => {
     const email: string | null = localStorage.getItem("email");
 
@@ -37,7 +37,7 @@ const Profile = () => {
         <div>{userData?.first_name}</div>
         <div>{userData?.last_name}</div>
         <div>{userData?.email}</div>
-        <div>{isAdmin && <p>I'm Admin</p>}</div>
+        <div>{currentUser === "admin" && <p>I'm Admin</p>}</div>
         <h1>Orders</h1>
       </div>
     </>

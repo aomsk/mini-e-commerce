@@ -15,12 +15,13 @@ import Admin from "./pages/Admin";
 import ProtectedRoute from "./utils/ProtectedRoutes";
 import AdminRoutes from "./utils/AdminRoutes";
 // context
-import { AuthContextProvider } from "./context/AuthContext";
+import { useAuthContext } from "./hooks/useAuthContext";
 
 const App = () => {
   const token = localStorage.getItem("token");
+  const { currentUser } = useAuthContext();
   return (
-    <AuthContextProvider>
+    <>
       <Navbar />
       <Routes>
         // protected routes
@@ -36,19 +37,17 @@ const App = () => {
         <Route path="/" element={<Home />} errorElement={<ErrorPage />} />
         <Route
           path="/login"
-          element={!token ? <Login /> : <Navigate to="/" replace />}
-          // element={<Login />}
+          element={!token || currentUser === "public" ? <Login /> : <Navigate to="/" replace />}
           errorElement={<ErrorPage />}
         />
         <Route
           path="/register"
-          element={!token ? <Register /> : <Navigate to="/" replace />}
-          // element={<Register />}
+          element={!token || currentUser === "public" ? <Register /> : <Navigate to="/" replace />}
           errorElement={<ErrorPage />}
         />
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </AuthContextProvider>
+    </>
   );
 };
 

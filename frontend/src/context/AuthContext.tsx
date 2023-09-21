@@ -17,7 +17,7 @@ interface IAuthContext {
   user: IUser;
   login: (email: string, password: string) => void;
   logout: () => void;
-  isAdmin: boolean;
+  currentUser: string;
 }
 
 export const AuthContext = createContext<IAuthContext | null>(null);
@@ -29,7 +29,8 @@ export const AuthContextProvider = ({ children }: IProps) => {
     email: "",
     token: "",
   });
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useState<string>(localStorage.getItem("user_type") || "public");
+  console.log("currentUser: ", currentUser);
 
   // login
   const login = async (email: string, password: string) => {
@@ -37,10 +38,15 @@ export const AuthContextProvider = ({ children }: IProps) => {
       .post("http://localhost:3000/api/login", { email, password })
       .then((response) => {
         if (response.status === 200) {
-          const decoded: any = jwtDecode(response.data.user.token);
           setUser(response.data.user);
+          const decoded: any = jwtDecode(response.data.user.token);
+          console.log("decoded: ", decoded);
           if (decoded.role === "admin") {
-            setIsAdmin(true);
+            setCurrentUser("admin");
+            localStorage.setItem("user_type", "admin");
+          } else {
+            setCurrentUser("customer");
+            localStorage.setItem("user_type", "customer");
           }
           navigate("/");
           localStorage.setItem("token", response.data.user.token);
@@ -63,11 +69,12 @@ export const AuthContextProvider = ({ children }: IProps) => {
       token: "",
     });
     localStorage.clear();
+    setCurrentUser("public");
     return redirect("/");
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAdmin }}>
+    <AuthContext.Provider value={{ user, login, logout, currentUser }}>
       <>
         {contextHolder}
         {children}
