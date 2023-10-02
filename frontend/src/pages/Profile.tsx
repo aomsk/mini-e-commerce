@@ -34,10 +34,10 @@ const Profile = () => {
     <>
       <div className="container" style={{ paddingTop: "10rem" }}>
         <h1>Profile</h1>
-        <div>{userData?.first_name}</div>
-        <div>{userData?.last_name}</div>
-        <div>{userData?.email}</div>
-        <div>{currentUser === "admin" && <p>I'm Admin</p>}</div>
+        <p>First Name : {userData?.first_name}</p>
+        <p>Last Name : {userData?.last_name}</p>
+        <p>Email : {userData?.email}</p>
+        <h2>{currentUser === "admin" && <p>I'm Admin</p>}</h2>
         <h1>Orders</h1>
       </div>
     </>

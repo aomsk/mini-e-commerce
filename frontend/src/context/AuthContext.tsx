@@ -53,6 +53,10 @@ export const AuthContextProvider = ({ children }: IProps) => {
         if (response.status === 200) {
           setUser(response.data.user);
           navigate("/");
+          messageApi.open({
+            type: "success",
+            content: "Welcome to MiniMini Store login success",
+          });
           localStorage.setItem("token", response.data.user.token);
           localStorage.setItem("email", response.data.user.email);
           localStorage.setItem("user", JSON.stringify(response.data.user));
@@ -75,6 +79,10 @@ export const AuthContextProvider = ({ children }: IProps) => {
     });
     localStorage.clear();
     setCurrentUser("public");
+    messageApi.open({
+      type: "success",
+      content: "logout success GoodBye 👋",
+    });
     return redirect("/");
   };
 
