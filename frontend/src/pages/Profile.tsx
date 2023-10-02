@@ -14,9 +14,8 @@ const Profile = () => {
   const { currentUser, user } = useAuthContext();
   const getUserData = async () => {
     // const email: string | null = localStorage.getItem("email");
-    const { email } = user;
     await axios
-      .post("http://localhost:3000/api/user", { email })
+      .post("http://localhost:3000/api/user", { email: user?.email })
 
       .then((response) => {
         if (response.status === 200) {
@@ -29,6 +28,7 @@ const Profile = () => {
   };
   useEffect(() => {
     getUserData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <>
