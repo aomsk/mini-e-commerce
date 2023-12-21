@@ -63,10 +63,17 @@ export const AuthContextProvider = ({ children }: IProps) => {
         }
       })
       .catch((error) => {
-        console.log("error: ", error);
+        console.log("error: ", error.message);
+        if (error.response) {
+          messageApi.open({
+            type: "error",
+            content: error.response.data.message,
+          });
+          return;
+        }
         messageApi.open({
           type: "error",
-          content: error.response.data.message,
+          content: error.message,
         });
       });
   };
