@@ -2,6 +2,7 @@ import { Button, Form, Input, message, Row, Col } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../styles/Register.css";
+import { useState } from "react";
 
 type FieldType = {
   first_name: string;
@@ -12,14 +13,16 @@ type FieldType = {
 };
 
 const Register = () => {
+  const [errorPassword, setErrorPassword] = useState<boolean>(false);
   const [messageApi, contextHolder] = message.useMessage();
   const navigate = useNavigate();
 
   const onFinish = async (values: FieldType) => {
     if (values.password !== values.confirm_password) {
+      setErrorPassword(true);
       messageApi.open({
         type: "warning",
-        content: "Password is not match with confirm password",
+        content: "Password and confirm password is not match",
       });
       return;
     }
@@ -67,50 +70,31 @@ const Register = () => {
           >
             <Row gutter={[8, 8]}>
               <Col xs={24} xl={12}>
-                <Form.Item<FieldType>
-                  label="first name"
-                  name="first_name"
-                  rules={[{ required: true, type: "string", message: "Please input your first name!" }]}
-                >
+                <Form.Item<FieldType> label="first name" name="first_name" rules={[{ required: true, type: "string", message: "Please input your first name!" }]}>
                   <Input />
                 </Form.Item>
               </Col>
               <Col xs={24} xl={12}>
-                <Form.Item<FieldType>
-                  label="last name"
-                  name="last_name"
-                  rules={[{ required: true, type: "string", message: "Please input your last name!" }]}
-                >
+                <Form.Item<FieldType> label="last name" name="last_name" rules={[{ required: true, type: "string", message: "Please input your last name!" }]}>
                   <Input />
                 </Form.Item>
               </Col>
             </Row>
-            <Form.Item<FieldType>
-              label="email"
-              name="email"
-              rules={[{ required: true, type: "email", message: "Please input your email!" }]}
-            >
+            <Form.Item<FieldType> label="email" name="email" rules={[{ required: true, type: "email", message: "Please input your email!" }]}>
               <Input />
             </Form.Item>
-            <Form.Item<FieldType>
-              label="password"
-              name="password"
-              rules={[{ required: true, type: "string", message: "Please input your password!" }]}
-            >
+            <Form.Item<FieldType> label="password" name="password" rules={[{ required: true, type: "string", message: "Please input your password!" }]}>
               <Input.Password />
             </Form.Item>
-            <Form.Item<FieldType>
-              label="confirm password"
-              name="confirm_password"
-              rules={[{ required: true, type: "string", message: "Please input confirm password!" }]}
-            >
-              <Input.Password />
+            <Form.Item<FieldType> label="confirm password" name="confirm_password" rules={[{ required: true, type: "string", message: "Please input confirm password!" }]}>
+              <Input.Password status={errorPassword ? "warning" : ""} />
             </Form.Item>
             <Form.Item>
               <Button type="primary" block htmlType="submit">
                 Register
               </Button>
             </Form.Item>
+            {/* </Space> */}
           </Form>
         </div>
       </div>
