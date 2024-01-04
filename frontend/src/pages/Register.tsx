@@ -94,7 +94,6 @@ const Register = () => {
                 Register
               </Button>
             </Form.Item>
-            {/* </Space> */}
           </Form>
         </div>
       </div>
