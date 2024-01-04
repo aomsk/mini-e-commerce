@@ -1,11 +1,5 @@
 import express from "express";
-import {
-  getAllProducts,
-  getProductBySlug,
-  createNewProduct,
-  updateProductByID,
-  deleteProductByID,
-} from "../controllers/products.controller";
+import { getAllProducts, getProductBySlug, createNewProduct, updateProductByID, deleteProductByID } from "../controllers/products.controller";
 import { isAdmin } from "../middlewares/authorization";
 
 const productsRouter = express.Router();

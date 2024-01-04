@@ -30,3 +30,24 @@ export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
     next();
   });
 };
+
+export const isCustomer = (req: Request, res: Response, next: NextFunction) => {
+  const authorization = req.headers["authorization"];
+  if (authorization === undefined) {
+    return res.status(401).json({ status: 401, message: "Unauthorized No token" });
+  }
+  // verify token
+  const privateKey: Secret = String(process.env.ACCESS_TOKEN_SECRET);
+  const token: string | JwtPayload = authorization.split(" ")[1];
+  jwt.verify(token, privateKey, (error, decoded) => {
+    const payload = decoded as IJWTPayload;
+    if (error) {
+      return res.status(401).json({ status: 401, message: error.message });
+    }
+    // Check User credentials
+    if (payload.role === undefined || (payload.role !== "admin" && payload.role !== "customer")) {
+      return res.status(403).json({ status: 403, message: "Forbidden" });
+    }
+    next();
+  });
+};
