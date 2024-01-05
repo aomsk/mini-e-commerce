@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuthContext } from "../hooks/useAuthContext";
+import { Spin } from "antd";
+
 interface User {
   user_id: number;
   first_name: string;
@@ -11,15 +13,17 @@ interface User {
 
 const Profile = () => {
   const [userData, setUserData] = useState<User>();
+  const [loading, setLoading] = useState<boolean>(true);
+
   const { currentUser, user } = useAuthContext();
   const getUserData = async () => {
     // const email: string | null = localStorage.getItem("email");
     await axios
       .post("http://localhost:3000/api/user", { email: user?.email })
-
       .then((response) => {
         if (response.status === 200) {
           setUserData(response.data.user);
+          setLoading(false);
         }
       })
       .catch((error) => {
@@ -33,12 +37,19 @@ const Profile = () => {
   return (
     <>
       <div className="container" style={{ paddingTop: "10rem" }}>
-        <h1>Profile</h1>
-        <p>First Name : {userData?.first_name}</p>
-        <p>Last Name : {userData?.last_name}</p>
-        <p>Email : {userData?.email}</p>
-        <h2>{currentUser === "admin" && <p>I'm Admin</p>}</h2>
-        <h1>Orders</h1>
+        {/* {loadding && <Spin />} */}
+        {loading ? (
+          <Spin />
+        ) : (
+          <div>
+            <h1>Profile</h1>
+            <p>First Name : {userData?.first_name}</p>
+            <p>Last Name : {userData?.last_name}</p>
+            <p>Email : {userData?.email}</p>
+            <h2>{currentUser === "admin" && <p>I'm Admin</p>}</h2>
+            <h1>Orders</h1>
+          </div>
+        )}
       </div>
     </>
   );
